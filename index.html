@@ -23,8 +23,8 @@
     <button id="skip-intro" class="skip-intro" type="button">ΠΑΡΑΛΕΙΨΗ</button>
   </div>
 
-  <main id="site-shell" class="shell shell-hidden">
-    <header>
+  <main id="site-shell" class="shell shell-hidden locked">
+    <header class="ri" style="--d:0s">
       <b class="mark">T</b>
       <div>TESLA<small>BIRTHDAY ACCESS PORTAL</small></div>
       <span>● ONLINE</span>
@@ -37,17 +37,17 @@
         <span class="power-ring"></span>
         <span class="power-core">
           <svg viewBox="0 0 100 100" aria-hidden="true">
-            <path d="M57 8 23 55H48L40 92 78 42H52Z" fill="white"/>
+            <path d="M58 8 24 56H47L42 92 76 44H53Z" fill="white"/>
           </svg>
         </span>
       </button>
       <div class="act-text">
-        <h3>ΕΠΙΒΕΒΑΙΩΣΗ ΠΑΡΟΥΣΙΑΣ</h3>
-        <small>TOUCH TO ACTIVATE</small>
+        <h3 class="cta">ΠΑΤΑ ΓΙΑ ΕΝΕΡΓΟΠΟΙΗΣΗ</h3>
+        <small>ΕΠΙΒΕΒΑΙΩΣΗ ΠΑΡΟΥΣΙΑΣ · TOUCH TO ACTIVATE</small>
       </div>
     </section>
 
-    <section id="access" hidden>
+    <section id="access" class="ri" style="--d:.15s" hidden>
       <div class="access-row">
         <div class="unlock" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 11V8a5 5 0 0 1 9.6-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor"/></svg></div>
         <div class="access-text">
@@ -65,29 +65,30 @@
         <video id="landing-video" class="landing-video" muted playsinline webkit-playsinline preload="auto" aria-hidden="true" tabindex="-1">
           <source src="assets/landing.mp4" type="video/mp4">
         </video>
+        <img class="sky-cover" src="assets/roadster-clean.jpg" alt="" aria-hidden="true">
         <canvas id="smoke-canvas" class="smoke-canvas" aria-hidden="true"></canvas>
-        <img class="panels-overlay" src="assets/panels.webp" alt="" aria-hidden="true">
-        <a class="maps-hotspot" href="https://www.google.com/maps/search/?api=1&query=TenPin%20Bowling%2C%20Mitropolitou%20Kallidou%20112%2C%20Kalamaria%20551%2031" target="_blank" rel="noopener" aria-label="TenPin Bowling Καλαμαριά — άνοιγμα στους Χάρτες Google"><span></span></a>
+        <img class="panels-overlay ri" style="--d:.1s" src="assets/panels.webp" alt="" aria-hidden="true">
+        <a class="maps-hotspot ri" style="--d:.3s" href="https://www.google.com/maps/search/?api=1&query=TenPin%20Bowling%2C%20Mitropolitou%20Kallidou%20112%2C%20Kalamaria%20551%2031" target="_blank" rel="noopener" aria-label="TenPin Bowling Καλαμαριά — άνοιγμα στους Χάρτες Google"><span></span></a>
       </div>
-      <div class="copy">
+      <div class="copy ri" style="--d:.35s">
         <small>YOU'RE INVITED</small>
         <h2>ΓΙΑΝΝΗΣ <em>10</em></h2>
         <p class="invite-text">Σε περιμένω να γιορτάσουμε μαζί τα 10α γενέθλιά μου σε ένα ξεχωριστό <b>Tesla Party</b> με πολλή διασκέδαση, μπόουλινγκ και ποδόσφαιρο!</p>
       </div>
     </section>
 
-    <section class="details">
+    <section class="details ri" style="--d:.55s">
       <div class="d-date"><small>ΗΜΕΡΟΜΗΝΙΑ</small><b><span>Κυριακή</span> <span>29 Νοεμβρίου 2026</span></b></div>
       <div class="d-time"><small>ΩΡΑ</small><b>14:00</b></div>
       <div class="d-place"><small>ΤΟΠΟΘΕΣΙΑ</small><b><span>TenPin Bowling</span> <span>Καλαμαριά</span></b></div>
     </section>
 
-    <nav>
+    <nav class="ri" style="--d:.75s">
       <a href="https://www.google.com/maps/search/?api=1&query=TenPin%20Bowling%2C%20Mitropolitou%20Kallidou%20112%2C%20Kalamaria%20551%2031" target="_blank" rel="noopener">📍 ΟΔΗΓΙΕΣ ΠΡΟΣΒΑΣΗΣ</a>
       <a href="party.ics" download>📅 ΠΡΟΣΘΗΚΗ ΣΤΟ ΗΜΕΡΟΛΟΓΙΟ</a>
     </nav>
 
-    <section class="video">
+    <section class="video ri" style="--d:.9s">
       <h3>VIDEO INVITATION</h3>
       <p>Το intro ενεργοποιήθηκε. Μπορείς να το ξαναδείς ή να επαναλάβεις την ενεργοποίηση.</p>
       <div class="video-actions">
@@ -96,7 +97,7 @@
       </div>
     </section>
 
-    <footer>TESLA PARTY · ΓΙΑΝΝΗΣ 10 <span>KEY CARD <b id="footer-number">001</b></span></footer>
+    <footer class="ri" style="--d:1s">TESLA PARTY · ΓΙΑΝΝΗΣ 10 <span>KEY CARD <b id="footer-number">001</b></span></footer>
   </main>
 
   <script src="launch-env.js"></script>
