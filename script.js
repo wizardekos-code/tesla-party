@@ -136,16 +136,45 @@ function launch() {
   activation.classList.add('pressed');
   playLanding();
 
-  revealTimer = setTimeout(() => {
-    activation.hidden = true;
-    access.hidden = false;
-    access.classList.remove('reveal');
-    void access.offsetWidth;
-    access.classList.add('reveal');
-    // Keep the car (and its smoke) in view rather than scrolling to the panel.
-    const r = hero.getBoundingClientRect();
-    if (r.bottom > window.innerHeight || r.top < 0) hero.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 900);
+  revealTimer = setTimeout(unlockSite, 900);
+}
+
+// Reveal everything that was hidden behind the key button, one item after another.
+const reduceMotion = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+function unlockSite() {
+  const before = hero.getBoundingClientRect().top;
+  siteShell.classList.add('revealing');
+  siteShell.classList.remove('locked');
+  activation.hidden = true;
+  access.hidden = false;
+  window.scrollTo(0, 0);
+  // FLIP: let the car glide from its centred teaser spot to its place in the full page.
+  const after = hero.getBoundingClientRect().top;
+  if (!reduceMotion.matches && Math.abs(before - after) > 2) {
+    hero.classList.remove('flip');
+    hero.style.transform = `translateY(${before - after}px)`;
+  }
+  void siteShell.offsetWidth;
+  requestAnimationFrame(() => {
+    hero.classList.add('flip');
+    hero.style.transform = '';
+    siteShell.classList.remove('revealing');
+    window.dispatchEvent(new Event('resize'));
+  });
+  setTimeout(() => hero.classList.remove('flip'), 900);
+}
+
+function lockSite() {
+  clearTimeout(revealTimer);
+  hero.classList.remove('flip');
+  hero.style.transform = '';
+  siteShell.classList.remove('revealing');
+  siteShell.classList.add('locked');
+  activation.hidden = false;
+  activation.classList.remove('pressed');
+  access.hidden = true;
+  power.disabled = false;
+  window.dispatchEvent(new Event('resize'));
 }
 
 function showAudioRetry() {
@@ -169,13 +198,9 @@ replay.addEventListener('click', () => {
   clearTimeout(revealTimer);
   smoke?.reset();
   if (landing) { landing.pause(); landing.classList.remove('show', 'fade'); }
-  activation.hidden = false;
-  activation.classList.remove('pressed');
-  access.hidden = true;
-  access.classList.remove('reveal');
-  power.disabled = false;
+  lockSite();
   document.getElementById('retry-sound')?.remove();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo(0, 0);
 });
 
 // Visual activation only: attendance is NOT recorded in a spreadsheet yet.
