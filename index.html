@@ -9,9 +9,17 @@
 </head>
 <body>
   <div id="intro-overlay" class="intro-overlay" aria-label="Tesla intro video">
-    <video id="intro-video" class="intro-video" autoplay muted playsinline preload="auto">
+    <video id="intro-video" class="intro-video" playsinline webkit-playsinline preload="auto" poster="assets/intro-poster.jpg">
       <source src="assets/intro.mp4" type="video/mp4">
     </video>
+    <div id="intro-gate" class="intro-gate">
+      <button id="intro-start" class="intro-start" type="button" aria-label="Έναρξη με ήχο">
+        <span class="start-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M38 26 76 50 38 74Z" fill="white"/></svg></span>
+        <b>ΠΑΤΗΣΕ ΓΙΑ ΕΚΚΙΝΗΣΗ</b>
+        <small>🔊 ΑΝΕΒΑΣΕ ΤΗΝ ΕΝΤΑΣΗ</small>
+      </button>
+    </div>
+    <button id="intro-unmute" class="intro-unmute" type="button" hidden>🔇 ΠΑΤΗΣΕ ΓΙΑ ΗΧΟ</button>
     <button id="skip-intro" class="skip-intro" type="button">ΠΑΡΑΛΕΙΨΗ</button>
   </div>
 
@@ -33,46 +41,50 @@
           </svg>
         </span>
       </button>
-      <h3>ΕΠΙΒΕΒΑΙΩΣΗ ΠΑΡΟΥΣΙΑΣ</h3>
-      <small>TOUCH TO ACTIVATE</small>
+      <div class="act-text">
+        <h3>ΕΠΙΒΕΒΑΙΩΣΗ ΠΑΡΟΥΣΙΑΣ</h3>
+        <small>TOUCH TO ACTIVATE</small>
+      </div>
     </section>
 
     <section id="access" hidden>
-      <p>KEY CARD <span id="card-number">001</span> RECOGNIZED</p>
-      <div class="unlock">⌁</div>
-      <strong>ACCESS GRANTED</strong>
-      <p>AUTHORIZED DRIVER</p>
-      <h1 id="guest-name">ΑΛΕΞΑΝΔΡΟΣ</h1>
-      <p>Το προσωπικό σου κλειδί για το πάρτι μόλις ενεργοποιήθηκε!</p>
-      <small>Η καταγραφή παρουσίας δεν έχει ενεργοποιηθεί ακόμη.</small>
+      <div class="access-row">
+        <div class="unlock" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 11V8a5 5 0 0 1 9.6-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor"/></svg></div>
+        <div class="access-text">
+          <p>KEY CARD <span id="card-number">001</span> · <strong>ACCESS GRANTED</strong></p>
+          <h1 id="guest-name">ΑΛΕΞΑΝΔΡΟΣ</h1>
+        </div>
+      </div>
+      <p class="access-note">Το προσωπικό σου κλειδί για το πάρτι μόλις ενεργοποιήθηκε!</p>
+      <small class="access-small">Η καταγραφή παρουσίας δεν έχει ενεργοποιηθεί ακόμη.</small>
     </section>
 
     <section class="hero" id="hero">
       <div class="photo" id="hero-photo">
-        <img src="assets/roadster.jpg" alt="Roadster Rocket">
-        <div class="glow"></div>
-        <div class="rocket-flame left"></div>
-        <div class="rocket-flame right"></div>
-        <div class="smoke a"></div>
-        <div class="smoke b"></div>
-        <div class="smoke c"></div>
+        <img src="assets/roadster.jpg" alt="Tesla Roadster — Κυριακή 29 Νοεμβρίου, 14:00, TenPin Bowling Καλαμαριά">
+        <video id="landing-video" class="landing-video" muted playsinline webkit-playsinline preload="auto" aria-hidden="true" tabindex="-1">
+          <source src="assets/landing.mp4" type="video/mp4">
+        </video>
+        <canvas id="smoke-canvas" class="smoke-canvas" aria-hidden="true"></canvas>
+        <img class="panels-overlay" src="assets/panels.webp" alt="" aria-hidden="true">
+        <a class="maps-hotspot" href="https://www.google.com/maps/search/?api=1&query=TenPin%20Bowling%2C%20Mitropolitou%20Kallidou%20112%2C%20Kalamaria%20551%2031" target="_blank" rel="noopener" aria-label="TenPin Bowling Καλαμαριά — άνοιγμα στους Χάρτες Google"><span></span></a>
       </div>
       <div class="copy">
         <small>YOU'RE INVITED</small>
         <h2>ΓΙΑΝΝΗΣ <em>10</em></h2>
-        <p>Σε περιμένω να γιορτάσουμε μαζί τα 10α γενέθλιά μου σε ένα ξεχωριστό <b>Tesla Party!</b></p>
+        <p class="invite-text">Σε περιμένω να γιορτάσουμε μαζί τα 10α γενέθλιά μου σε ένα ξεχωριστό <b>Tesla Party</b> με πολλή διασκέδαση, μπόουλινγκ και ποδόσφαιρο!</p>
       </div>
     </section>
 
     <section class="details">
-      <div><small>ΗΜΕΡΟΜΗΝΙΑ</small><b>Κυριακή<br>29 Νοεμβρίου 2026</b></div>
-      <div><small>ΩΡΑ</small><b>14:00</b></div>
-      <div><small>ΤΟΠΟΘΕΣΙΑ</small><b>TenPin Bowling<br>Καλαμαριά</b></div>
+      <div class="d-date"><small>ΗΜΕΡΟΜΗΝΙΑ</small><b><span>Κυριακή</span> <span>29 Νοεμβρίου 2026</span></b></div>
+      <div class="d-time"><small>ΩΡΑ</small><b>14:00</b></div>
+      <div class="d-place"><small>ΤΟΠΟΘΕΣΙΑ</small><b><span>TenPin Bowling</span> <span>Καλαμαριά</span></b></div>
     </section>
 
     <nav>
-      <a href="https://www.google.com/maps/search/?api=1&query=TenPin%20Bowling%20Kalamaria" target="_blank" rel="noopener">⌖ ΟΔΗΓΙΕΣ ΠΡΟΣΒΑΣΗΣ</a>
-      <a href="party.ics" download>▦ ΠΡΟΣΘΗΚΗ ΣΤΟ ΗΜΕΡΟΛΟΓΙΟ</a>
+      <a href="https://www.google.com/maps/search/?api=1&query=TenPin%20Bowling%2C%20Mitropolitou%20Kallidou%20112%2C%20Kalamaria%20551%2031" target="_blank" rel="noopener">📍 ΟΔΗΓΙΕΣ ΠΡΟΣΒΑΣΗΣ</a>
+      <a href="party.ics" download>📅 ΠΡΟΣΘΗΚΗ ΣΤΟ ΗΜΕΡΟΛΟΓΙΟ</a>
     </nav>
 
     <section class="video">
@@ -87,6 +99,8 @@
     <footer>TESLA PARTY · ΓΙΑΝΝΗΣ 10 <span>KEY CARD <b id="footer-number">001</b></span></footer>
   </main>
 
+  <script src="launch-env.js"></script>
+  <script src="smoke.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
