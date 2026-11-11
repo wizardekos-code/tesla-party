@@ -1,4 +1,4 @@
-// Tesla Key Card — personalized guest access and rocket launch
+// Tesla Key Card — personalized guest access and Roadster thruster launch
 const params = new URLSearchParams(window.location.search);
 const raw = params.get('card') || '001';
 const card = /^\d{1,3}$/.test(raw) ? raw.padStart(3, '0') : '001';
@@ -14,92 +14,127 @@ fetch('guests.json')
 const activation = document.getElementById('activation');
 const access = document.getElementById('access');
 const hero = document.getElementById('hero');
+const photo = document.getElementById('hero-photo');
 const power = document.getElementById('power');
 const replay = document.getElementById('replay');
 
-// Smoke is sampled from the user's approved invitation footage.
-// Old CSS-generated oval puffs and artificial jets are intentionally not used.
-const photo = hero.querySelector('.photo');
-photo.querySelectorAll('.jet-system').forEach(el => el.remove());
-const footageSmoke = document.createElement('div');
-footageSmoke.className = 'footage-smoke';
-footageSmoke.setAttribute('aria-hidden', 'true');
-footageSmoke.innerHTML = '<i class="smoke-from-video smoke-left"></i><i class="smoke-from-video smoke-right"></i>';
-photo.appendChild(footageSmoke);
+// Let iOS treat our sounds as media playback (plays even with the ring/silent switch on Safari 17+).
+try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
 
-// The intro is an exclusive full-screen scene; the page must NOT be visible beneath it.
+// ---------- INTRO (with sound) ----------
+// Browsers only allow sound after a tap, so the intro waits on its first frame
+// for a "start" tap and then plays UNMUTED inside that tap.
 const introOverlay = document.getElementById('intro-overlay');
 const introVideo = document.getElementById('intro-video');
+const introGate = document.getElementById('intro-gate');
+const introStart = document.getElementById('intro-start');
+const introUnmute = document.getElementById('intro-unmute');
 const siteShell = document.getElementById('site-shell');
 const skipIntro = document.getElementById('skip-intro');
 const replayIntro = document.getElementById('replay-intro');
+const launchAudio = new Audio('assets/launch.m4a');
+launchAudio.preload = 'auto';
+launchAudio.setAttribute('playsinline', '');
 let introTimeout;
+
 function endIntro() {
   clearTimeout(introTimeout);
   introVideo?.pause();
   if (introOverlay) introOverlay.hidden = true;
-  if (siteShell) {
-    siteShell.hidden = false;
-    siteShell.classList.remove('shell-hidden');
-  }
+  siteShell.hidden = false;
+  siteShell.classList.remove('shell-hidden');
   document.body.classList.remove('playing-intro');
+  window.dispatchEvent(new Event('resize'));
 }
-function beginIntro() {
-  if (!introVideo || !introOverlay) return endIntro();
+
+function showGate() {
   siteShell.hidden = true;
   siteShell.classList.add('shell-hidden');
   introOverlay.hidden = false;
   document.body.classList.add('playing-intro');
-  introVideo.currentTime = 0;
-  introVideo.muted = true; // mobile autoplay requires muted video
-  const attempt = introVideo.play();
-  if (attempt && typeof attempt.catch === 'function') {
-    attempt.catch(() => { skipIntro.textContent = 'ΣΥΝΕΧΕΙΑ ΣΤΗΝ ΠΡΟΣΚΛΗΣΗ'; });
-  }
-  clearTimeout(introTimeout);
-  introTimeout = setTimeout(endIntro, 19000); // safeguard if browser loses ended event
+  introGate.hidden = false;
+  introUnmute.hidden = true;
+  introVideo.pause();
+  try { introVideo.currentTime = 0; } catch (e) {}
 }
+
+function playIntroWithSound() {
+  // Runs synchronously inside the tap → sound is allowed on iPhone and Android.
+  introGate.hidden = true;
+  introVideo.muted = false;
+  introVideo.volume = 1;
+  try { introVideo.currentTime = 0; } catch (e) {}
+  const attempt = introVideo.play();
+  if (attempt && attempt.catch) {
+    attempt.catch(() => {
+      // Extremely rare: play muted and offer a sound button.
+      introVideo.muted = true;
+      introVideo.play().catch(() => endIntro());
+      introUnmute.hidden = false;
+    });
+  }
+  // Warm up the launch sound so the button reacts instantly later.
+  launchAudio.load();
+  if (landing && landing.readyState < 2) landing.load();
+  clearTimeout(introTimeout);
+  introTimeout = setTimeout(endIntro, 19000); // safeguard if 'ended' never fires
+}
+
+introStart?.addEventListener('click', playIntroWithSound);
+introUnmute?.addEventListener('click', () => {
+  introVideo.muted = false;
+  introVideo.play().catch(() => {});
+  introUnmute.hidden = true;
+});
 introVideo?.addEventListener('ended', endIntro);
 introVideo?.addEventListener('error', endIntro);
 skipIntro?.addEventListener('click', endIntro);
-replayIntro?.addEventListener('click', () => { window.scrollTo(0,0); beginIntro(); });
-if (introOverlay && introVideo && siteShell) beginIntro();
+replayIntro?.addEventListener('click', () => { window.scrollTo(0, 0); showGate(); playIntroWithSound(); });
+if (introOverlay && introVideo && siteShell) showGate(); else endIntro();
 
-// A real audio file (extracted from the user's invitation video) plays directly
-// inside the user's tap handler. No AudioContext oscillator beeps.
-const rocketAudio = new Audio('assets/tesla-activation.m4a');
-rocketAudio.preload = 'auto';
-rocketAudio.playsInline = true;
-rocketAudio.volume = 1;
+// ---------- ACTIVATION: key card → unlock → cold-gas thrusters ----------
+const smoke = window.RoadsterSmoke ? new window.RoadsterSmoke(document.getElementById('smoke-canvas'), photo, launchAudio) : null;
 let revealTimer;
-let effectTimer;
+
+// Pre-rendered landing (real-looking cold-gas vapor). Muted video, so it may start from the tap;
+// the sound comes from launchAudio, started in the same tap.
+const landing = document.getElementById('landing-video');
+if (landing) {
+  landing.muted = true;
+  landing.addEventListener('playing', () => { landing.classList.add('show'); landing.classList.remove('fade'); });
+  landing.addEventListener('timeupdate', () => {
+    if (landing.duration && landing.currentTime > landing.duration - 0.45) landing.classList.add('fade');
+  });
+  landing.addEventListener('ended', () => { landing.classList.remove('show'); landing.classList.remove('fade'); });
+}
+function playLanding() {
+  if (!landing || landing.error) { smoke?.launch(); return; }
+  landing.classList.remove('fade');
+  try { landing.currentTime = 0; } catch (e) {}
+  const p = landing.play();
+  if (p && p.catch) p.catch(() => { landing.classList.remove('show'); smoke?.launch(); });
+}
 
 function launch() {
   if (power.disabled) return;
   power.disabled = true;
   clearTimeout(revealTimer);
-  clearTimeout(effectTimer);
 
-  // Start audio synchronously during the actual touch/click for iOS Safari.
+  // Audio must start synchronously inside the tap for iOS Safari.
   try {
-    rocketAudio.pause();
-    rocketAudio.currentTime = 0;
-    const result = rocketAudio.play();
-    if (result && typeof result.catch === 'function') {
-      result.catch(err => {
-        console.warn('Rocket launch audio blocked or unavailable:', err);
-        showAudioRetry();
-      });
-    }
+    launchAudio.pause();
+    launchAudio.currentTime = 0;
+    launchAudio.muted = false;
+    launchAudio.volume = 1;
+    const result = launchAudio.play();
+    if (result && result.catch) result.catch(err => { console.warn('Launch audio blocked:', err); showAudioRetry(); });
   } catch (err) {
-    console.warn('Rocket launch audio error:', err);
+    console.warn('Launch audio error:', err);
     showAudioRetry();
   }
 
   activation.classList.add('pressed');
-  hero.classList.remove('launch');
-  void hero.offsetWidth; // Restart CSS animation on repeat
-  hero.classList.add('launch');
+  playLanding();
 
   revealTimer = setTimeout(() => {
     activation.hidden = true;
@@ -107,9 +142,10 @@ function launch() {
     access.classList.remove('reveal');
     void access.offsetWidth;
     access.classList.add('reveal');
-    access.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, 1400);
-  effectTimer = setTimeout(() => hero.classList.remove('launch'), 6100);
+    // Keep the car (and its smoke) in view rather than scrolling to the panel.
+    const r = hero.getBoundingClientRect();
+    if (r.bottom > window.innerHeight || r.top < 0) hero.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 900);
 }
 
 function showAudioRetry() {
@@ -118,28 +154,28 @@ function showAudioRetry() {
   retry.id = 'retry-sound';
   retry.type = 'button';
   retry.textContent = '🔊 ΠΑΤΗΣΕ ΓΙΑ ΗΧΟ';
-  retry.style.cssText = 'display:block;margin:12px auto;padding:12px 16px;border:1px solid #ff5168;border-radius:12px;background:#581a26;color:white;font-weight:700';
+  retry.className = 'retry-sound';
   retry.addEventListener('click', () => {
-    rocketAudio.currentTime = 0;
-    rocketAudio.play().then(() => retry.remove()).catch(() => {});
+    launchAudio.currentTime = 0;
+    launchAudio.play().then(() => { retry.remove(); playLanding(); }).catch(() => {});
   });
   hero.insertAdjacentElement('beforebegin', retry);
 }
 
 power.addEventListener('click', launch);
 replay.addEventListener('click', () => {
-  rocketAudio.pause();
-  rocketAudio.currentTime = 0;
+  launchAudio.pause();
+  launchAudio.currentTime = 0;
   clearTimeout(revealTimer);
-  clearTimeout(effectTimer);
-  hero.classList.remove('launch');
+  smoke?.reset();
+  if (landing) { landing.pause(); landing.classList.remove('show', 'fade'); }
   activation.hidden = false;
   activation.classList.remove('pressed');
   access.hidden = true;
   access.classList.remove('reveal');
   power.disabled = false;
   document.getElementById('retry-sound')?.remove();
-  activation.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 // Visual activation only: attendance is NOT recorded in a spreadsheet yet.

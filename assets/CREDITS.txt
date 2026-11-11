@@ -1,0 +1,6 @@
+Sound credits
+- Tesla Model S Plaid full-throttle acceleration: "Acceleration of an electric car" by justVova,
+  https://freesound.org/people/justVova/sounds/761685/ — CC0 1.0 (public domain, no attribution required).
+- Cold-gas thruster blasts, intro power-up/warp swell, unlock clunk: generated with ElevenLabs Sound Effects v2.
+- Two-tone key-card chime: synthesized for this site.
+- Landing animation (assets/landing.mp4): AI-generated video (Grok Imagine), starting and ending on the invitation image.
