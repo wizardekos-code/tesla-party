@@ -1,0 +1,13 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Giannis Tesla Party//Invitation//EL
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:giannis-tesla-party-20261129@invitation.local
+DTSTAMP:20261111T080000Z
+DTSTART;TZID=Europe/Athens:20261129T140000
+SUMMARY:Τα 10α γενέθλια του Γιάννη - Tesla Party
+LOCATION:TenPin Bowling\, Καλαμαριά\, Θεσσαλονίκη
+DESCRIPTION:Tesla Birthday Party του Γιάννη!
+END:VEVENT
+END:VCALENDAR
