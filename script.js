@@ -17,17 +17,53 @@ const hero = document.getElementById('hero');
 const power = document.getElementById('power');
 const replay = document.getElementById('replay');
 
-// Visual rocket elements are injected into the existing photo, without editing index.html.
+// Smoke is sampled from the user's approved invitation footage.
+// Old CSS-generated oval puffs and artificial jets are intentionally not used.
 const photo = hero.querySelector('.photo');
-if (photo && !photo.querySelector('.jet-system')) {
-  const system = document.createElement('div');
-  system.className = 'jet-system';
-  system.setAttribute('aria-hidden', 'true');
-  system.innerHTML = '<i class="jet jet-left"></i><i class="jet jet-right"></i><i class="exhaust-glow"></i>' +
-    Array.from({length: 11}, (_, i) => `<span class="puff puff-${i+1}"></span>`).join('');
-  photo.appendChild(system);
-}
+photo.querySelectorAll('.jet-system').forEach(el => el.remove());
+const footageSmoke = document.createElement('div');
+footageSmoke.className = 'footage-smoke';
+footageSmoke.setAttribute('aria-hidden', 'true');
+footageSmoke.innerHTML = '<i class="smoke-from-video smoke-left"></i><i class="smoke-from-video smoke-right"></i>';
+photo.appendChild(footageSmoke);
 
+// The intro is an exclusive full-screen scene; the page must NOT be visible beneath it.
+const introOverlay = document.getElementById('intro-overlay');
+const introVideo = document.getElementById('intro-video');
+const siteShell = document.getElementById('site-shell');
+const skipIntro = document.getElementById('skip-intro');
+const replayIntro = document.getElementById('replay-intro');
+let introTimeout;
+function endIntro() {
+  clearTimeout(introTimeout);
+  introVideo?.pause();
+  if (introOverlay) introOverlay.hidden = true;
+  if (siteShell) {
+    siteShell.hidden = false;
+    siteShell.classList.remove('shell-hidden');
+  }
+  document.body.classList.remove('playing-intro');
+}
+function beginIntro() {
+  if (!introVideo || !introOverlay) return endIntro();
+  siteShell.hidden = true;
+  siteShell.classList.add('shell-hidden');
+  introOverlay.hidden = false;
+  document.body.classList.add('playing-intro');
+  introVideo.currentTime = 0;
+  introVideo.muted = true; // mobile autoplay requires muted video
+  const attempt = introVideo.play();
+  if (attempt && typeof attempt.catch === 'function') {
+    attempt.catch(() => { skipIntro.textContent = 'ΣΥΝΕΧΕΙΑ ΣΤΗΝ ΠΡΟΣΚΛΗΣΗ'; });
+  }
+  clearTimeout(introTimeout);
+  introTimeout = setTimeout(endIntro, 19000); // safeguard if browser loses ended event
+}
+introVideo?.addEventListener('ended', endIntro);
+introVideo?.addEventListener('error', endIntro);
+skipIntro?.addEventListener('click', endIntro);
+replayIntro?.addEventListener('click', () => { window.scrollTo(0,0); beginIntro(); });
+if (introOverlay && introVideo && siteShell) beginIntro();
 
 // A real audio file (extracted from the user's invitation video) plays directly
 // inside the user's tap handler. No AudioContext oscillator beeps.
