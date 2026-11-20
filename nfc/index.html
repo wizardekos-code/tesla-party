@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Γιάννης 10 · Tesla Key</title>
+<meta name="description" content="Ενεργοποίησε το Tesla του Γιάννη">
+<link rel="stylesheet" href="nfc.css">
+</head>
+<body>
+<main id="screen" class="screen state-idle">
+  <div class="bg-glow"></div>
+  <div class="scanline"></div>
+
+  <header class="topbar">
+    <span class="status"><i class="dot"></i>KEY CARD ΣΥΝΔΕΘΗΚΕ</span>
+    <span class="clock" id="clock">--:--</span>
+  </header>
+
+  <section class="boot" id="boot">
+    <svg class="tlogo" viewBox="0 0 342 432" aria-hidden="true">
+      <path fill="currentColor" d="M171 432 230 93c56 0 74 6 76 31 0 0 38-14 56-43C294 49 226 47 226 47L171 115 116 47S48 49-20 81c18 29 56 43 56 43 2-25 20-31 76-31l59 339Z" transform="translate(0 0)"/>
+      <path fill="currentColor" d="M171 30c45 0 100 6 156 31 7-13 9-19 9-19C275 18 220 6 171 5 122 6 67 18 6 42c0 0 3 7 9 19C71 36 126 30 171 30Z"/>
+    </svg>
+    <div class="brand">T E S L A</div>
+    <div class="sub">ΓΕΝΕΘΛΙΑ ΓΙΑΝΝΗ · 10</div>
+
+    <button id="power" class="power" type="button" aria-label="Ενεργοποίηση">
+      <span class="ring"></span>
+      <svg class="bolt" viewBox="0 0 100 100" aria-hidden="true"><path d="M58 8 24 56H47L42 92 76 44H53Z" fill="#fff"/></svg>
+    </button>
+    <div class="label">ΕΝΕΡΓΟΠΟΙΗΣΗ</div>
+    <div class="hint">ΠΑΤΑ ΓΙΑ ΕΝΕΡΓΟΠΟΙΗΣΗ</div>
+  </section>
+
+  <section class="poweron" id="poweron" aria-hidden="true">
+    <svg class="tlogo big" viewBox="0 0 342 432" aria-hidden="true">
+      <path fill="currentColor" d="M171 432 230 93c56 0 74 6 76 31 0 0 38-14 56-43C294 49 226 47 226 47L171 115 116 47S48 49-20 81c18 29 56 43 56 43 2-25 20-31 76-31l59 339Z"/>
+      <path fill="currentColor" d="M171 30c45 0 100 6 156 31 7-13 9-19 9-19C275 18 220 6 171 5 122 6 67 18 6 42c0 0 3 7 9 19C71 36 126 30 171 30Z"/>
+    </svg>
+    <div class="bar"><i></i></div>
+    <div class="ptext">ΕΝΕΡΓΟΠΟΙΗΣΗ ΣΥΣΤΗΜΑΤΟΣ…</div>
+  </section>
+
+  <section class="player" id="player">
+    <video id="video" playsinline webkit-playsinline preload="auto"></video>
+    <div class="tap-sound" id="tapSound" hidden>🔊 ΠΑΤΑ ΓΙΑ ΗΧΟ</div>
+  </section>
+
+  <section class="endcard" id="endcard">
+    <svg class="tlogo small" viewBox="0 0 342 432" aria-hidden="true">
+      <path fill="currentColor" d="M171 432 230 93c56 0 74 6 76 31 0 0 38-14 56-43C294 49 226 47 226 47L171 115 116 47S48 49-20 81c18 29 56 43 56 43 2-25 20-31 76-31l59 339Z"/>
+      <path fill="currentColor" d="M171 30c45 0 100 6 156 31 7-13 9-19 9-19C275 18 220 6 171 5 122 6 67 18 6 42c0 0 3 7 9 19C71 36 126 30 171 30Z"/>
+    </svg>
+    <h1>ΣΕ ΠΕΡΙΜΕΝΩ!</h1>
+    <div class="info">
+      <div><b>Κυριακή 29 Νοεμβρίου</b></div>
+      <div class="sep">·</div>
+      <div><b>14:00</b></div>
+      <div class="sep">·</div>
+      <div><b>TenPin Bowling Καλαμαριά</b></div>
+    </div>
+    <button id="replay" class="replay" type="button">↻ ΞΑΝΑ ΤΟ ΒΙΝΤΕΟ</button>
+  </section>
+</main>
+<script src="nfc.js"></script>
+</body>
+</html>
